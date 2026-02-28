@@ -23,7 +23,7 @@ export function ContactForm() {
     setStatus("idle")
 
     try {
-      const response = await fetch("https://formsubmit.co/ajax/abhi.ksari@gmail.com", {
+      const response = await fetch("https://formsubmit.co/ajax/vickysharmaa786@gmail.com", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,17 +1,62 @@
 "use client"
 
 import Image from "next/image"
-import { useState, useEffect } from "react"
+import { useState, useEffect, type FormEvent } from "react"
 import { X } from "lucide-react"
 
 export function ApplyModal() {
   const [open, setOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle")
 
   useEffect(() => {
     const handler = () => setOpen(true)
     window.addEventListener("open-apply-modal", handler)
     return () => window.removeEventListener("open-apply-modal", handler)
   }, [])
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    const form = e.currentTarget
+    const formData = new FormData(form)
+    const getValue = (key: string) => (formData.get(key)?.toString().trim() ?? "")
+
+    const fullName = getValue("fullName")
+    const email = getValue("email")
+    const contactNumber = getValue("contactNumber")
+    const location = getValue("location")
+
+    setIsSubmitting(true)
+    setStatus("idle")
+
+    try {
+      const response = await fetch("https://formsubmit.co/ajax/vickysharmaa786@gmail.com", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          _subject: `Website Application - ${fullName || "New Applicant"}`,
+          fullName,
+          email,
+          contactNumber,
+          location,
+          source: "Apply Modal",
+        }),
+      })
+
+      if (!response.ok) throw new Error("Failed to submit")
+
+      setStatus("success")
+      form.reset()
+    } catch {
+      setStatus("error")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   if (!open) return null
 
@@ -40,31 +85,50 @@ export function ApplyModal() {
           Start your journey to study abroad today.
         </p>
 
-        <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <input
+            name="fullName"
             type="text"
             placeholder="Full Name"
+            required
+            minLength={2}
             className="rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-[oklch(0.30_0.08_260)] focus:outline-none focus:ring-2 focus:ring-ring/20"
           />
           <input
+            name="email"
             type="email"
             placeholder="Email Address"
+            required
             className="rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-[oklch(0.30_0.08_260)] focus:outline-none focus:ring-2 focus:ring-ring/20"
           />
           <input
+            name="contactNumber"
             type="tel"
             placeholder="Contact Number"
+            required
+            minLength={7}
             className="rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-[oklch(0.30_0.08_260)] focus:outline-none focus:ring-2 focus:ring-ring/20"
           />
-          <select className="rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground focus:border-[oklch(0.30_0.08_260)] focus:outline-none focus:ring-2 focus:ring-ring/20">
+          <select
+            name="location"
+            required
+            className="rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground focus:border-[oklch(0.30_0.08_260)] focus:outline-none focus:ring-2 focus:ring-ring/20"
+          >
             <option value="">Select Location</option>
             <option>Kathmandu</option>
           </select>
+          {status === "success" && (
+            <p className="text-sm text-green-700">Thanks! Your application has been sent.</p>
+          )}
+          {status === "error" && (
+            <p className="text-sm text-red-700">Couldn’t send right now. Please try again.</p>
+          )}
           <button
             type="submit"
-            className="rounded-lg bg-[oklch(0.30_0.08_260)] py-3 text-sm font-semibold text-[oklch(0.95_0.005_250)] transition-all hover:bg-[oklch(0.25_0.07_260)]"
+            disabled={isSubmitting}
+            className="rounded-lg bg-[oklch(0.30_0.08_260)] py-3 text-sm font-semibold text-[oklch(0.95_0.005_250)] transition-all hover:bg-[oklch(0.25_0.07_260)] disabled:cursor-not-allowed disabled:opacity-70"
           >
-            Submit Application
+            {isSubmitting ? "Submitting..." : "Submit Application"}
           </button>
         </form>
       </div>
