@@ -1,8 +1,11 @@
 "use client"
-import type { FormEvent } from "react"
+import { useState, type FormEvent } from "react"
 
 export function ContactForm() {
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle")
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     const form = e.currentTarget
@@ -16,19 +19,36 @@ export function ContactForm() {
     const course = getValue("course")
     const message = getValue("message")
 
-    const subject = `Website Inquiry - ${fullName || "New Lead"}`
-    const body = [
-      `Full Name: ${fullName}`,
-      `Contact Number: ${contactNumber}`,
-      `Email: ${email}`,
-      `Interested Country: ${country}`,
-      `Interested Course: ${course}`,
-      "",
-      "Message:",
-      message,
-    ].join("\n")
+    setIsSubmitting(true)
+    setStatus("idle")
 
-    window.location.href = `mailto:abhi.ksari@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+    try {
+      const response = await fetch("https://formsubmit.co/ajax/abhi.ksari@gmail.com", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          _subject: `Website Inquiry - ${fullName || "New Lead"}`,
+          fullName,
+          contactNumber,
+          email,
+          country,
+          course,
+          message,
+        }),
+      })
+
+      if (!response.ok) throw new Error("Failed to submit")
+
+      setStatus("success")
+      form.reset()
+    } catch {
+      setStatus("error")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -95,11 +115,18 @@ export function ContactForm() {
           Privacy Policy
         </a>
       </p>
+      {status === "success" && (
+        <p className="text-sm text-green-700">Thanks! Your message has been sent.</p>
+      )}
+      {status === "error" && (
+        <p className="text-sm text-red-700">Couldn’t send right now. Please try again.</p>
+      )}
       <button
         type="submit"
-        className="self-start rounded-lg bg-[oklch(0.30_0.08_260)] px-8 py-3 text-sm font-semibold text-[oklch(0.95_0.005_250)] transition-all hover:bg-[oklch(0.25_0.07_260)]"
+        disabled={isSubmitting}
+        className="self-start rounded-lg bg-[oklch(0.30_0.08_260)] px-8 py-3 text-sm font-semibold text-[oklch(0.95_0.005_250)] transition-all hover:bg-[oklch(0.25_0.07_260)] disabled:cursor-not-allowed disabled:opacity-70"
       >
-        Send Message
+        {isSubmitting ? "Sending..." : "Send Message"}
       </button>
     </form>
   )
