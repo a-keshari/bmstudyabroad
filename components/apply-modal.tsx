@@ -59,9 +59,6 @@ export function ApplyModal() {
           <select className="rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground focus:border-[oklch(0.30_0.08_260)] focus:outline-none focus:ring-2 focus:ring-ring/20">
             <option value="">Select Location</option>
             <option>Kathmandu</option>
-            <option>Chitwan</option>
-            <option>Pokhara</option>
-            <option>Butwal</option>
           </select>
           <button
             type="submit"

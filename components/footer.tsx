@@ -2,35 +2,25 @@ import Image from "next/image"
 import Link from "next/link"
 import { Phone, Mail, MapPin, Facebook, Instagram, Youtube } from "lucide-react"
 
-const offices = [
-  { name: "Head Office - Putalisadak, Kathmandu", label: "B.M. Centre" },
-  { name: "Pokhara", label: "B.M. Centre" },
-  { name: "Chitwan", label: "B.M. Centre" },
-  { name: "Butwal", label: "B.M. Centre" },
-]
-
 export function Footer() {
   return (
     <footer className="bg-[oklch(0.18_0.04_260)] text-[oklch(0.85_0.01_250)]">
-      {/* Offices bar */}
+      {/* Head office bar */}
       <div className="border-b border-[oklch(0.28_0.04_260)]">
         <div className="mx-auto max-w-7xl px-4 py-10">
           <h3 className="mb-6 font-serif text-xl font-bold text-[oklch(0.95_0.005_250)]">
-            Our Offices
+            Head Office
           </h3>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {offices.map((office) => (
-              <div
-                key={office.name}
-                className="flex items-start gap-3 rounded-lg border border-[oklch(0.28_0.04_260)] bg-[oklch(0.22_0.05_260)] p-4 transition-colors hover:border-[oklch(0.75_0.15_75)]/30"
-              >
-                <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-[oklch(0.75_0.15_75)]" />
-                <div>
-                  <p className="text-sm font-semibold text-[oklch(0.95_0.005_250)]">{office.name}</p>
-                  <p className="text-xs text-[oklch(0.65_0.02_260)]">{office.label}</p>
-                </div>
+          <div className="max-w-md">
+            <div className="flex items-start gap-3 rounded-lg border border-[oklch(0.28_0.04_260)] bg-[oklch(0.22_0.05_260)] p-4 transition-colors hover:border-[oklch(0.75_0.15_75)]/30">
+              <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-[oklch(0.75_0.15_75)]" />
+              <div>
+                <p className="text-sm font-semibold text-[oklch(0.95_0.005_250)]">
+                  Putalisadak, Kathmandu
+                </p>
+                <p className="text-xs text-[oklch(0.65_0.02_260)]">B.M. Centre</p>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </div>

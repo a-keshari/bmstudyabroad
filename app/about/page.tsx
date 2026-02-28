@@ -26,7 +26,7 @@ const milestones = [
   { year: "2000", event: "Founded in Kathmandu with a mission to guide students abroad" },
   { year: "2005", event: "Expanded test preparation classes to include all major exams" },
   { year: "2010", event: "Reached 5,000+ students served milestone" },
-  { year: "2015", event: "Opened branch offices across Nepal" },
+  { year: "2015", event: "Expanded counseling services across Nepal" },
   { year: "2020", event: "Partnered with 200+ universities worldwide" },
   { year: "2025", event: "Celebrated 25 years of educational excellence" },
 ]
